@@ -18,8 +18,6 @@ typedef struct _Time{
     uint8_t second;
 }Time;
 
-int sts;
-void** re;
 boolean isStart = false;
 Problem problem;
 Time timer;
@@ -30,13 +28,15 @@ Scanner sc;
 Calculator calculator;
 
 unsigned _stdcall Theead_Timmer(void*);
+unsigned _stdcall UserInterFace(void* arg);
 
 void init(){
     sc = new_Scanner(System.in);
     calculator = new_Calculator();
     problem.nums = (double*)malloc(sizeof(double) * 2);
     srand(time(NULL));
-    _beginthreadex(null, 0, Theead_Timmer, null, 0, &sts);
+    _beginthreadex(null, 0, Theead_Timmer, null, 0, null);
+    _beginthreadex(null, 0, UserInterFace, null, 0, null);
     system("cls");
 }
 
@@ -106,6 +106,12 @@ unsigned _stdcall Theead_Timmer(void* arg){
                 timer.minute++;
             }
         }
+    }
+}
+
+unsigned _stdcall UserInterFace(void* arg){
+    while(isStart){
+        Sleep(1);
         gotoxy((COORD){1, 0});
         System.out.print("Score:%03d Level:%03d ", score, level);
         gotoxy((COORD){21, 0});
