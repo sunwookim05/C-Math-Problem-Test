@@ -80,12 +80,6 @@ int main(void){
 
     while(isStart){
         getProblem();
-        lineClear((COORD){1, 0}, 80);
-        lineClear((COORD){1, 1}, 80);
-        gotoxy((COORD){1, 0});
-        System.out.print("Score:%03d Level:%03d ", score, level);
-        gotoxy((COORD){1, 1});
-        System.out.print("%g %c %g = ", problem.nums[0], problem.op, problem.nums[1]);
         answer = sc.nextInt();
         if(answer == floor((calculator.calculate(problem.nums[0], problem.nums[1], problem.op) * 100) / 100)) score += 10;
         else score -= 5;
@@ -112,8 +106,12 @@ unsigned _stdcall Theead_Timmer(void* arg){
                 timer.minute++;
             }
         }
+        gotoxy((COORD){1, 0});
+        System.out.print("Score:%03d Level:%03d ", score, level);
         gotoxy((COORD){21, 0});
         System.out.print("Time:%02d:%02d:%02d", timer.minute, timer.second, timer.ms);
-        gotoxy((COORD){0, 0});
+        gotoxy((COORD){1, 1});
+        System.out.print("%g %c %g = ", problem.nums[0], problem.op, problem.nums[1]);
+        gotoxy((COORD){9, 1});
     }
 }
