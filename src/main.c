@@ -18,11 +18,6 @@ typedef struct _Time{
     uint8_t second;
 }Time;
 
-typedef struct _Pos{
-    short x;
-    short y;
-}Pos;
-
 int sts;
 void** re;
 boolean isStart = false;
@@ -45,8 +40,7 @@ void init(){
     system("cls");
 }
 
-void gotoxy(Pos po){
-    COORD pos = {po.x, po.y};
+void gotoxy(COORD pos){
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
@@ -56,8 +50,8 @@ void getProblem(){
     problem.nums[1] = (double)(rand() % 10);
 }
 
-void lineClear(Pos po, int length){
-    gotoxy(po);
+void lineClear(COORD pos, int length){
+    gotoxy(pos);
     for(int i = 0; i < length; i++) System.out.print(" ");
 }
 
@@ -86,11 +80,11 @@ int main(void){
 
     while(isStart){
         getProblem();
-        lineClear((Pos){1, 0}, 80);
-        lineClear((Pos){1, 1}, 80);
-        gotoxy((Pos){1, 0});
+        lineClear((COORD){1, 0}, 80);
+        lineClear((COORD){1, 1}, 80);
+        gotoxy((COORD){1, 0});
         System.out.print("Score:%03d Level:%03d ", score, level);
-        gotoxy((Pos){1, 1});
+        gotoxy((COORD){1, 1});
         System.out.print("%g %c %g = ", problem.nums[0], problem.op, problem.nums[1]);
         answer = sc.nextInt();
         if(answer == floor((calculator.calculate(problem.nums[0], problem.nums[1], problem.op) * 100) / 100)) score += 10;
@@ -118,8 +112,8 @@ unsigned _stdcall Theead_Timmer(void* arg){
                 timer.minute++;
             }
         }
-        gotoxy((Pos){21, 0});
+        gotoxy((COORD){21, 0});
         System.out.print("Time:%02d:%02d:%02d", timer.minute, timer.second, timer.ms);
-        gotoxy((Pos){0, 0});
+        gotoxy((COORD){0, 0});
     }
 }
