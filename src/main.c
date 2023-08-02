@@ -27,6 +27,7 @@ int8_t score = 0;
 double answer;
 Scanner sc;
 Calculator calculator;
+String buf;
 
 char c;
 uint16_t i = 0;
@@ -39,6 +40,7 @@ void init(){
     calculator = new_Calculator();
     problem.nums = (double*)malloc(sizeof(double) * 2);
     problem.str = (String)calloc(0, sizeof(char) * 1);
+    buf = (String)calloc(0, sizeof(char) * 5);
     srand(time(NULL));
     _beginthreadex(null, 0, Theead_Timmer, null, 0, null);
     _beginthreadex(null, 0, UserInterFace, null, 0, null);
@@ -60,25 +62,12 @@ void lineClear(COORD pos, int length){
     for(int i = 0; i < length; i++) System.out.print(" ");
 }
 
-boolean cmpUserInput(boolean mode){
-    getchar();
-    String s = sc.next();
-    if(mode)
-        if(!(((s[0]|0x20)^'s') ^ ((s[1]|0x20)^'t') ^ ((s[2]|0x20)^'a') ^ ((s[3]|0x20)^'r') ^ ((s[4]|0x20)^'t'))) return true;
-        else return false;
-    if(!mode)
-        if(!(((s[0]|0x20)^'e') ^ ((s[1]|0x20)^'x') ^ ((s[2]|0x20)^'i') ^ ((s[3]|0x20)^'t'))) return true;
-        else return false;
-}
-
 void startGame(){
     System.out.println("This is a math game.");
     System.out.println("You can only express up to two decimal places.");
-    System.out.println("If you want to start, send \"start\".");
-    if (cmpUserInput(true)){
-        isStart = true;
-        return;
-    }else startGame();
+    System.out.println("If you want to start, press any key.");
+    getchar();
+    isStart = true;
 }
 
 void gameOver(){
@@ -88,9 +77,8 @@ void gameOver(){
     System.out.println("Game Over");
     System.out.println("Your level is %d", level);
     System.out.println("Your time is %02d:%02d:%02d", timer.minute, timer.second, timer.ms);
-    System.out.println("If you want to out, send \"exit\".");
-    if (cmpUserInput(false)) return;
-    else gameOver();
+    System.out.println("If you want to out, press any key.");
+    getchar();
     system("cls");
 }
 
@@ -100,8 +88,10 @@ int main(void){
 
     while(isStart){
         i = 0;
+        sprintf(buf, "\0\0\0\0\0");
         getProblem();
-        while (i < 5 - 1 & (c = getchar()) != EOF & c != '\n') {
+        while (i < 5 - 1 & (c = fgetc(stdin)) != EOF & c != '\n') {
+            sprintf(buf, "%s%c",buf, c);
             problem.str[i++] = c;
             problem.str = (String)realloc(problem.str, sizeof(char) * (i + 1));
             problem.str[i] = '\0';
@@ -116,6 +106,7 @@ int main(void){
         if(score < 0) gameOver();
     }
 
+    free(buf);
     free(problem.str);
     free(problem.nums);
     return 0;
@@ -139,13 +130,13 @@ unsigned _stdcall Theead_Timmer(void* arg){
 unsigned _stdcall UserInterFace(void* arg){
     while(isStart){
         Sleep(5);
-        lineClear((COORD){0, 1}, 20);
+        lineClear((COORD){0, 1}, 15);
         gotoxy((COORD){0, 0});
         System.out.print("Score:%03d Level:%03d ", score, level);
         gotoxy((COORD){21, 0});
         System.out.print("Time:%02d:%02d:%02d", timer.minute, timer.second, timer.ms);
         gotoxy((COORD){1, 1});
-        System.out.print("%g %c %g = %s", problem.nums[0], problem.op, problem.nums[1], problem.str);
+        System.out.print("%g %c %g = %s", problem.nums[0], problem.op, problem.nums[1], buf);
         gotoxy((COORD){9, 1});
     }
 }
