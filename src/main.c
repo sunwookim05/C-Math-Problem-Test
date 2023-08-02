@@ -60,12 +60,25 @@ void lineClear(COORD pos, int length){
     for(int i = 0; i < length; i++) System.out.print(" ");
 }
 
+boolean cmpUserInput(boolean mode){
+    getchar();
+    String s = sc.next();
+    if(mode)
+        if(!(((s[0]|0x20)^'s') ^ ((s[1]|0x20)^'t') ^ ((s[2]|0x20)^'a') ^ ((s[3]|0x20)^'r') ^ ((s[4]|0x20)^'t'))) return true;
+        else return false;
+    if(!mode)
+        if(!(((s[0]|0x20)^'e') ^ ((s[1]|0x20)^'x') ^ ((s[2]|0x20)^'i') ^ ((s[3]|0x20)^'t'))) return true;
+        else return false;
+}
+
 void startGame(){
     System.out.println("This is a math game.");
     System.out.println("You can only express up to two decimal places.");
-    System.out.println("If you want to start, press any key.");
-    getchar();
-    isStart = true;
+    System.out.println("If you want to start, send \"start\".");
+    if (cmpUserInput(true)){
+        isStart = true;
+        return;
+    }else startGame();
 }
 
 void gameOver(){
@@ -75,8 +88,9 @@ void gameOver(){
     System.out.println("Game Over");
     System.out.println("Your level is %d", level);
     System.out.println("Your time is %02d:%02d:%02d", timer.minute, timer.second, timer.ms);
-    System.out.println("If you want to out, press any key.");
-    getchar();
+    System.out.println("If you want to out, send \"exit\".");
+    if (cmpUserInput(false)) return;
+    else gameOver();
     system("cls");
 }
 
@@ -87,7 +101,7 @@ int main(void){
     while(isStart){
         i = 0;
         getProblem();
-        while (i < 5 - 1 & (c = fgetc(stdin)) != EOF & c != '\n') {
+        while (i < 5 - 1 & (c = getchar()) != EOF & c != '\n') {
             problem.str[i++] = c;
             problem.str = (String)realloc(problem.str, sizeof(char) * (i + 1));
             problem.str[i] = '\0';
