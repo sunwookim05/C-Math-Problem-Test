@@ -81,7 +81,7 @@ int main(void){
 
     while(isStart){
         getProblem();
-        answer = sc.nextInt();
+        answer = sc.nextDouble();
         if(answer == floor((calculator.calculate(problem.nums[0], problem.nums[1], problem.op) * 100) / 100)) score += 10;
         else score -= 5;
         if(score >= 100){
