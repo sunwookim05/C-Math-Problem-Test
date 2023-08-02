@@ -10,6 +10,7 @@ import SYSTEM System;
 typedef struct _Problem{
     double* nums;
     char op;
+    String str;
 }Problem;
 
 typedef struct _Time{
@@ -27,6 +28,9 @@ double answer;
 Scanner sc;
 Calculator calculator;
 
+char c;
+uint16_t i = 0;
+
 unsigned _stdcall Theead_Timmer(void*);
 unsigned _stdcall UserInterFace(void* arg);
 
@@ -34,6 +38,7 @@ void init(){
     sc = new_Scanner(System.in);
     calculator = new_Calculator();
     problem.nums = (double*)malloc(sizeof(double) * 2);
+    problem.str = (String)calloc(0, sizeof(char) * 1);
     srand(time(NULL));
     _beginthreadex(null, 0, Theead_Timmer, null, 0, null);
     _beginthreadex(null, 0, UserInterFace, null, 0, null);
@@ -80,8 +85,14 @@ int main(void){
     init();
 
     while(isStart){
+        i = 0;
         getProblem();
-        answer = sc.nextDouble();
+        while (i < 5 - 1 & (c = fgetc(stdin)) != EOF & c != '\n') {
+            problem.str[i++] = c;
+            problem.str = (String)realloc(problem.str, sizeof(char) * (i + 1));
+            problem.str[i] = '\0';
+        }
+        answer = atof(problem.str);
         if(answer == floor((calculator.calculate(problem.nums[0], problem.nums[1], problem.op) * 100) / 100)) score += 10;
         else score -= 5;
         if(score >= 100){
@@ -119,7 +130,7 @@ unsigned _stdcall UserInterFace(void* arg){
         gotoxy((COORD){21, 0});
         System.out.print("Time:%02d:%02d:%02d", timer.minute, timer.second, timer.ms);
         gotoxy((COORD){1, 1});
-        System.out.print("%g %c %g = ", problem.nums[0], problem.op, problem.nums[1]);
+        System.out.print("%g %c %g = %s", problem.nums[0], problem.op, problem.nums[1], problem.str);
         gotoxy((COORD){9, 1});
     }
 }
