@@ -102,6 +102,7 @@ int main(void){
         if(score < 0) gameOver();
     }
 
+    free(problem.str);
     free(problem.nums);
     return 0;
 }
