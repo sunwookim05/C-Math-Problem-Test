@@ -59,7 +59,7 @@ void startGame(){
     System.out.println("This is a math game.");
     System.out.println("You can only express up to two decimal places.");
     System.out.println("If you want to start, press any key.");
-    system("pause");
+    getchar();
     isStart = true;
 }
 
@@ -70,7 +70,8 @@ void gameOver(){
     System.out.println("Game Over");
     System.out.println("Your level is %d", level);
     System.out.println("Your time is %02d:%02d:%02d", timer.minute, timer.second, timer.ms);
-    system("pause");
+    System.out.println("If you want to out, press any key.");
+    getchar();
     system("cls");
 }
 
