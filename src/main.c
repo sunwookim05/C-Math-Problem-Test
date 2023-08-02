@@ -111,8 +111,9 @@ unsigned _stdcall Theead_Timmer(void* arg){
 
 unsigned _stdcall UserInterFace(void* arg){
     while(isStart){
-        Sleep(1);
-        gotoxy((COORD){1, 0});
+        Sleep(5);
+        lineClear((COORD){0, 1}, 20);
+        gotoxy((COORD){0, 0});
         System.out.print("Score:%03d Level:%03d ", score, level);
         gotoxy((COORD){21, 0});
         System.out.print("Time:%02d:%02d:%02d", timer.minute, timer.second, timer.ms);
