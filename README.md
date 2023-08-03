@@ -1,6 +1,6 @@
 # C-Math-Problem-Test
 
----------Calculator---------
+---------Math-Test---------
 
 gcc -c src\Calculator.c -I inc\
 
