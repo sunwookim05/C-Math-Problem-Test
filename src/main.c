@@ -51,6 +51,16 @@ void gotoxy(COORD pos){
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
+void printlnXY(COORD pos, const String format, ...){
+    va_list ap;
+    char buffer[4096];
+    va_start(ap, format);
+    vsprintf(buffer, format, ap);
+    va_end(ap);
+    gotoxy(pos);
+    System.out.println(buffer);
+}
+
 void getProblem(){
     problem.op = (char)OPERATOR(rand() % 5);
     problem.nums[0] = (double)(rand() % 10);
@@ -131,12 +141,9 @@ unsigned _stdcall UserInterFace(void* arg){
     while(isStart){
         Sleep(5);
         lineClear((COORD){0, 1}, 15);
-        gotoxy((COORD){0, 0});
-        System.out.print("Score:%03d Level:%03d ", score, level);
-        gotoxy((COORD){21, 0});
-        System.out.print("Time:%02d:%02d:%02d", timer.minute, timer.second, timer.ms);
-        gotoxy((COORD){1, 1});
-        System.out.print("%g %c %g = %s", problem.nums[0], problem.op, problem.nums[1], buf);
+        printlnXY((COORD){1, 0}, "Score:%03d Level:%03d ", score, level);
+        printlnXY((COORD){21, 0}, "Time:%02d:%02d:%02d", timer.minute, timer.second, timer.ms);
+        printlnXY((COORD){1, 1}, "%g %c %g = %s", problem.nums[0], problem.op, problem.nums[1], problem.str);
         gotoxy((COORD){9, 1});
     }
 }
