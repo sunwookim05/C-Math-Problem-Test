@@ -32,8 +32,8 @@ String buf;
 char c;
 uint16_t i = 0;
 
-unsigned _stdcall Theead_Timmer(void*);
-unsigned _stdcall UserInterFace(void* arg);
+unsigned _stdcall Timmer(void*);
+unsigned _stdcall UserInterFace(void*);
 
 void init(){
     sc = new_Scanner(System.in);
@@ -42,7 +42,7 @@ void init(){
     problem.str = (String)calloc(0, sizeof(char) * 1);
     buf = (String)calloc(0, sizeof(char) * 5);
     srand(time(NULL));
-    _beginthreadex(null, 0, Theead_Timmer, null, 0, null);
+    _beginthreadex(null, 0, Timmer, null, 0, null);
     _beginthreadex(null, 0, UserInterFace, null, 0, null);
     system("cls");
 }
@@ -112,7 +112,7 @@ int main(void){
     return 0;
 }
 
-unsigned _stdcall Theead_Timmer(void* arg){
+unsigned _stdcall Timmer(void* arg){
     while(isStart){
         Sleep(10);
         timer.ms += 1;
