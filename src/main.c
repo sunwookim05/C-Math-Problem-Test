@@ -63,7 +63,7 @@ void printlnXY(COORD pos, const String format, ...){
 }
 
 void getProblem(){
-    problem.op = (char)OPERATOR(rand() % 5);
+    problem.op = (char)OPERATOR(rand() % 4);
     problem.nums[0] = (double)(rand() % 10);
     problem.nums[1] = (double)(rand() % 10);
 }
