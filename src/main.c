@@ -29,6 +29,7 @@ Scanner sc;
 Calculator calculator;
 String buf;
 
+boolean inPut = false;
 char c;
 uint16_t i = 0;
 
@@ -98,15 +99,16 @@ int main(void){
 
     while(isStart){
         i = 0;
-        sprintf(buf, "\0\0\0\0\0");
+        memset(buf, 0, sizeof(char) * 5);
         getProblem();
         while (i < 5 - 1 & (c = fgetc(stdin)) != EOF & c != '\n') {
-            sprintf(buf, "%s%c",buf, c);
-            problem.str[i++] = c;
-            problem.str = (String)realloc(problem.str, sizeof(char) * (i + 1));
-            problem.str[i] = '\0';
+            inPut = true;
+            buf[i++] = c;
+            buf = (String)realloc(buf, sizeof(char) * (i + 1));
+            buf[i] = '\0';
+            inPut = false;
         }
-        answer = atof(problem.str);
+        answer = atof(buf);
         if(answer == floor((calculator.calculate(problem.nums[0], problem.nums[1], problem.op) * 100) / 100)) score += 10;
         else score -= 5;
         if(score >= 100){
@@ -140,10 +142,11 @@ unsigned _stdcall Timmer(void* arg){
 unsigned _stdcall UserInterFace(void* arg){
     while(isStart){
         Sleep(5);
+        problem.str = buf;
         lineClear((COORD){0, 1}, 15);
         printlnXY((COORD){1, 0}, "Score:%03d Level:%03d ", score, level);
         printlnXY((COORD){21, 0}, "Time:%02d:%02d:%02d", timer.minute, timer.second, timer.ms);
         printlnXY((COORD){1, 1}, "%g %c %g = %s", problem.nums[0], problem.op, problem.nums[1], problem.str);
-        gotoxy((COORD){9, 1});
+        gotoxy((COORD){0, 1});
     }
 }
