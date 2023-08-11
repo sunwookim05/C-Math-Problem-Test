@@ -27,7 +27,6 @@ int8_t score = 0;
 double answer;
 Scanner sc;
 Calculator calculator;
-String buf;
 
 boolean inPut = false;
 char c;
@@ -40,8 +39,7 @@ void init(){
     sc = new_Scanner(System.in);
     calculator = new_Calculator();
     problem.nums = (double*)malloc(sizeof(double) * 2);
-    problem.str = (String)calloc(0, sizeof(char) * 1);
-    buf = (String)calloc(0, sizeof(char) * 5);
+    problem.str = (String)calloc(0, sizeof(char) * 5);
     srand(time(NULL));
     _beginthreadex(null, 0, Timmer, null, 0, null);
     _beginthreadex(null, 0, UserInterFace, null, 0, null);
@@ -62,15 +60,19 @@ void printlnXY(COORD pos, const String format, ...){
     System.out.println(buffer);
 }
 
-void getProblem(){
-    problem.op = (char)OPERATOR(rand() % 4);
-    problem.nums[0] = (double)(rand() % 10);
-    problem.nums[1] = (double)(rand() % 10);
-}
-
 void lineClear(COORD pos, int length){
     gotoxy(pos);
     for(int i = 0; i < length; i++) System.out.print(" ");
+}
+
+void clear(COORD startPos, COORD endPos){
+    for(int i = startPos.Y; i <= endPos.Y; i++) lineClear((COORD){startPos.X, i}, endPos.X - startPos.X);
+}
+
+void getProblem(){
+    problem.op = (char)OPERATOR(rand() % 4);
+    *(problem.nums) = (double)(rand() % 10);
+    *(problem.nums + 1) = (double)(rand() % 10);
 }
 
 void startGame(){
@@ -99,17 +101,17 @@ int main(void){
 
     while(isStart){
         i = 0;
-        memset(buf, 0, sizeof(char) * 5);
+        memset(problem.str, 0, sizeof(char) * 5);
         getProblem();
         while (i < 5 - 1 & (c = fgetc(stdin)) != EOF & c != '\n') {
             inPut = true;
-            buf[i++] = c;
-            buf = (String)realloc(buf, sizeof(char) * (i + 1));
-            buf[i] = '\0';
+            if(c == 0x08 & i > 0) i--;
+            else *(problem.str + i++) = c;
+            *(problem.str + i) = '\0';
             inPut = false;
         }
-        answer = atof(buf);
-        if(answer == floor((calculator.calculate(problem.nums[0], problem.nums[1], problem.op) * 100) / 100)) score += 10;
+        answer = atof(problem.str);
+        if(answer == floor((calculator.calculate(*(problem.nums), *(problem.nums + 1), problem.op) * 100) / 100)) score += 10;
         else score -= 5;
         if(score >= 100){
             level++;
@@ -118,7 +120,6 @@ int main(void){
         if(score < 0) gameOver();
     }
 
-    free(buf);
     free(problem.str);
     free(problem.nums);
     return 0;
@@ -142,11 +143,12 @@ unsigned _stdcall Timmer(void* arg){
 unsigned _stdcall UserInterFace(void* arg){
     while(isStart){
         Sleep(5);
-        problem.str = buf;
-        lineClear((COORD){0, 1}, 15);
-        printlnXY((COORD){1, 0}, "Score:%03d Level:%03d ", score, level);
-        printlnXY((COORD){21, 0}, "Time:%02d:%02d:%02d", timer.minute, timer.second, timer.ms);
-        printlnXY((COORD){1, 1}, "%g %c %g = %s", problem.nums[0], problem.op, problem.nums[1], problem.str);
-        gotoxy((COORD){0, 1});
+        if(!inPut){
+            clear((COORD){0, 1}, (COORD){80, 2});
+            printlnXY((COORD){1, 0}, "Score:%03d Level:%03d ", score, level);
+            printlnXY((COORD){21, 0}, "Time:%02d:%02d:%02d", timer.minute, timer.second, timer.ms);
+            printlnXY((COORD){1, 1}, "%g %c %g = %g", *(problem.nums), problem.op, *(problem.nums + 1), atof(problem.str));
+            gotoxy((COORD){0, 1});
+        }
     }
 }
